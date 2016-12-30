@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 cmake_policy(VERSION 2.8)
 
 project (HDR)
+set(CMAKE_SUPPRESS_REGENERATION true)
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
@@ -77,7 +78,7 @@ file(GLOB SHADERS
 foreach(SHADER ${SHADERS})
 	if(WIN32)
 		# configure_file(${SHADER} "test")
-		add_custom_command(TARGET HDR PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} ${CMAKE_SOURCE_DIR}/bin/)
+		add_custom_command(TARGET HDR PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} ${CMAKE_SOURCE_DIR}/bin/Debug )
 	elseif(UNIX)
 		file(COPY ${SHADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${CHAPTER})			
 	endif(WIN32)
