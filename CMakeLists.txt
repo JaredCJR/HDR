@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 cmake_policy(VERSION 2.8)
 
-project (LearnOpenGL)
+project (HDR)
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
@@ -52,116 +52,40 @@ else()
   set(LIBS )
 endif(WIN32)
 
-set(CHAPTERS
-    1.getting_started
-    2.lighting
-    3.model_loading
-    4.advanced_opengl
-    5.advanced_lighting
-    6.pbr
-    7.in_practice
-)
-
-set(1.getting_started   
-    1.hello_window
-    2.hello_triangle
-    3.shaders
-    4.textures
-    5.transformations
-    6.coordinate_systems
-    7.camera
-)
-
-set(2.lighting
-    1.colors
-    2.basic_lighting
-    3.materials
-    4.lighting_maps
-    5.light_casters
-    6.multiple_lights
-)
-
-set(3.model_loading
-    1.model_loading
-)
-
-set(4.advanced_opengl
-    1.depth_testing
-    2.stencil_testing
-    3.1.blending_discard
-    3.2.blending_sort
-    5.framebuffers
-    6.cubemaps
-    8.advanced_glsl
-    9.geometry_shader
-    10.instancing
-    11.anti_aliasing
-)
-
-set(5.advanced_lighting
-    1.advanced_lighting
-    2.gamma_correction
-    3.1.shadow_mapping
-    3.2.point_shadows
-    # 3.3.csm
-    4.normal_mapping
-    5.parallax_mapping
-    6.hdr
-    7.bloom
-    8.deferred_shading
-    9.ssao
-)
-
-set(6.pbr
-    1.1.lighting
-    1.2.lighting_textured
-    # 2.1.ibl_irradiance
-    # 2.2.ibl_specular
-)
-
-set(7.in_practice
-    1.debugging
-    # 2.text_rendering
-)
-
-
 
 configure_file(configuration/root_directory.h.in configuration/root_directory.h)
 include_directories(${CMAKE_BINARY_DIR}/configuration)
 
-foreach(CHAPTER ${CHAPTERS})
-    foreach(DEMO ${${CHAPTER}})
-        file(GLOB SOURCE
-            "src/${CHAPTER}/${DEMO}/*.h"
-            "src/${CHAPTER}/${DEMO}/*.cpp"
-        )
-        add_executable(${DEMO} ${SOURCE})
-        target_link_libraries(${DEMO} ${LIBS})
-		if(WIN32)
-        	set_target_properties(${DEMO} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
-		elseif(UNIX)
-			set_target_properties(${DEMO} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin/${CHAPTER}")
-		endif(WIN32)
-        # copy shader files to build directory
-        file(GLOB SHADERS 
-                 "src/${CHAPTER}/${DEMO}/*.vs"
-                 "src/${CHAPTER}/${DEMO}/*.frag"
-                 "src/${CHAPTER}/${DEMO}/*.gs"
-        )
-        foreach(SHADER ${SHADERS})
-			if(WIN32)
-            	# configure_file(${SHADER} "test")
-            	add_custom_command(TARGET ${DEMO} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${DEMO}>)
-			elseif(UNIX)
-				file(COPY ${SHADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${CHAPTER})			
-			endif(WIN32)
 
-        endforeach(SHADER)
+file(GLOB SOURCE
+    "src/*.h"
+    "src/*.cpp"
+)
+add_executable(HDR ${SOURCE})
+target_link_libraries(HDR ${LIBS})
+if(WIN32)
+set_target_properties( PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/")
+elseif(UNIX)
+set_target_properties( PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin/")
+endif(WIN32)
+ # copy shader files to build directory
+file(GLOB SHADERS 
+"src/*.vs"
+"src/*.frag"
+"src/*.gs"
+)
+foreach(SHADER ${SHADERS})
+	if(WIN32)
+		# configure_file(${SHADER} "test")
+		add_custom_command(TARGET HDR PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} ${CMAKE_SOURCE_DIR}/bin/)
+	elseif(UNIX)
+		file(COPY ${SHADER} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${CHAPTER})			
+	endif(WIN32)
+ endforeach(SHADER)
       # if compiling for visual studio, also use configure file for each project (specifically to set up working directory)
-      if(MSVC)
-          configure_file(${CMAKE_SOURCE_DIR}/configuration/visualstudio.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/${DEMO}.vcxproj.user @ONLY)
-      endif(MSVC)
-    endforeach(DEMO)
-endforeach(CHAPTER)
+if(MSVC)
+       configure_file(${CMAKE_SOURCE_DIR}/configuration/visualstudio.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/${DEMO}.vcxproj.user @ONLY)
+endif(MSVC)
+
 
 include_directories(${CMAKE_SOURCE_DIR}/includes)
