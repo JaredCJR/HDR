@@ -6,8 +6,8 @@
 #include <GLFW/glfw3.h>
 
 // GL includes
-#include <learnopengl/shader.h>
-#include <learnopengl/camera.h>
+#include <myopengl/shader.h>
+#include <myopengl/camera.h>
 
 // GLM Mathemtics
 #include <glm/glm.hpp>
@@ -16,7 +16,7 @@
 
 // Other Libs
 #include <SOIL.h>
-#include <learnopengl/filesystem.h>
+#include <myopengl/filesystem.h>
 
 // Properties
 const GLuint SCR_WIDTH = 800, SCR_HEIGHT = 600;
@@ -55,7 +55,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", nullptr, nullptr); // Windowed
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "HDR project", nullptr, nullptr); // Windowed
     glfwMakeContextCurrent(window);
 
     // Set the required callback functions
