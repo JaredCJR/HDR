@@ -17,9 +17,10 @@
 // Other Libs
 #include <SOIL.h>
 #include <myopengl/filesystem.h>
+#include <string.h>
 
 // Properties
-const GLuint SCR_WIDTH = 800, SCR_HEIGHT = 600;
+const GLuint SCR_WIDTH = 1366, SCR_HEIGHT = 768;
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -43,7 +44,7 @@ GLboolean hdr = true; // Change with 'Space'
 GLfloat exposure = 1.0f; // Change with Q and E
 
 // Global variables
-GLuint woodTexture;
+GLuint targetTexture;
 
 // The MAIN function, from here we start our application and run our Game loop
 int main()
@@ -95,7 +96,8 @@ int main()
     lightColors.push_back(glm::vec3(0.0f, 0.1f, 0.0f));
 
     // Load textures
-    woodTexture = loadTexture(FileSystem::getPath("resources/textures/wood.png").c_str());
+	std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
+    targetTexture = loadTexture(FileSystem::getPath(pict_src).c_str());
 
     // Set up floating point framebuffer to render scene to
     GLuint hdrFBO;
@@ -144,7 +146,7 @@ int main()
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"),       1, GL_FALSE, glm::value_ptr(view));
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, woodTexture);
+            glBindTexture(GL_TEXTURE_2D, targetTexture);
             // - set lighting uniforms
             for (GLuint i = 0; i < lightPositions.size(); i++)
             {
