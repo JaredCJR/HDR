@@ -33,7 +33,7 @@ void RenderCube();
 void RenderQuad();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 46.0f));
 
 // Delta
 GLfloat deltaTime = 0.0f;
