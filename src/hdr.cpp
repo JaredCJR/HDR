@@ -84,19 +84,26 @@ int main()
     // Light sources
     // - Positions
     std::vector<glm::vec3> lightPositions;
-    lightPositions.push_back(glm::vec3(0.0f, 0.0f, 49.5f)); // back light
-    lightPositions.push_back(glm::vec3(-1.4f, -1.9f, 9.0f));
-    lightPositions.push_back(glm::vec3(0.0f, -1.8f, 4.0f));
-    lightPositions.push_back(glm::vec3(0.8f, -1.7f, 6.0f));
+    lightPositions.push_back(glm::vec3(0.0f, 0.0f, 50.0f)); // back light,(0,0,52) is the closest light pos to the target in the middle
+    lightPositions.push_back(glm::vec3(2.5f, 2.5f, 0.0f));//light at right-top
+	lightPositions.push_back(glm::vec3(-2.5f, 2.5f, 0.0f));//light at left-top
+	lightPositions.push_back(glm::vec3(-2.5f, -2.5f, 0.0f));//light at left-down
+	lightPositions.push_back(glm::vec3(2.5f, -2.5f, 0.0f));//light at right-down
+
     // - Colors
     std::vector<glm::vec3> lightColors;
-    lightColors.push_back(glm::vec3(200.0f, 200.0f, 200.0f));
-    lightColors.push_back(glm::vec3(0.1f, 0.0f, 0.0f));
-    lightColors.push_back(glm::vec3(0.0f, 0.0f, 0.2f));
-    lightColors.push_back(glm::vec3(0.0f, 0.1f, 0.0f));
+    lightColors.push_back(glm::vec3(100.0f, 100.0f, 100.0f));
+    lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
+	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
+	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
+	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
 
     // Load textures
-	std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
+	//std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
+	//std::string pict_src = "resources/textures/hdr/christmas_night.png";
+	std::string pict_src = "resources/textures/hdr/dark_mountain.png";
+	//std::string pict_src = "resources/textures/hdr/Diego_Bay.png";
+	//std::string pict_src = "resources/textures/hdr/forest.png";
     targetTexture = loadTexture(FileSystem::getPath(pict_src).c_str());
 
     // Set up floating point framebuffer to render scene to
