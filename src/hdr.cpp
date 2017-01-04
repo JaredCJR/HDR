@@ -19,6 +19,11 @@
 #include <myopengl/filesystem.h>
 #include <string.h>
 
+#define CUBE_LENGTH             (30.0f)
+#define LIGHT_ON_BACK_POS       (CUBE_LENGTH - 0.1f)
+#define MY_WHITE                150.0f
+#define MY_WHITE_INTENSITY      glm::vec3(MY_WHITE, MY_WHITE, MY_WHITE)
+
 // Properties
 const GLuint SCR_WIDTH = 1366, SCR_HEIGHT = 768;
 
@@ -33,7 +38,7 @@ void RenderCube();
 void RenderQuad();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 46.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, CUBE_LENGTH/2 ));//Initial camera position
 
 // Delta
 GLfloat deltaTime = 0.0f;
@@ -45,6 +50,8 @@ GLfloat exposure = 1.0f; // Change with Q and E
 
 // Global variables
 GLuint targetTexture;
+
+
 
 // The MAIN function, from here we start our application and run our Game loop
 int main()
@@ -84,24 +91,24 @@ int main()
     // Light sources
     // - Positions
     std::vector<glm::vec3> lightPositions;
-    lightPositions.push_back(glm::vec3(0.0f, 0.0f, 50.0f)); // back light,(0,0,52) is the closest light pos to the target in the middle
-    lightPositions.push_back(glm::vec3(2.5f, 2.5f, 0.0f));//light at right-top
-	lightPositions.push_back(glm::vec3(-2.5f, 2.5f, 0.0f));//light at left-top
-	lightPositions.push_back(glm::vec3(-2.5f, -2.5f, 0.0f));//light at left-down
-	lightPositions.push_back(glm::vec3(2.5f, -2.5f, 0.0f));//light at right-down
+    lightPositions.push_back(glm::vec3(0.0f, 0.0f, 0.1f)); // back light
+    lightPositions.push_back(glm::vec3(2.5f, 2.5f, LIGHT_ON_BACK_POS));//light at right-top
+	lightPositions.push_back(glm::vec3(-2.5f, 2.5f, LIGHT_ON_BACK_POS));//light at left-top
+	lightPositions.push_back(glm::vec3(-2.5f, -2.5f, LIGHT_ON_BACK_POS));//light at left-down
+	lightPositions.push_back(glm::vec3(2.5f, -2.5f, LIGHT_ON_BACK_POS));//light at right-down
 
     // - Colors
     std::vector<glm::vec3> lightColors;
-    lightColors.push_back(glm::vec3(100.0f, 100.0f, 100.0f));
-    lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
-	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
-	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
-	lightColors.push_back(glm::vec3(255.0f, 255.0f, 255.0f));
+    lightColors.push_back(glm::vec3(250.0f, 250.0f, 250.0f));
+    lightColors.push_back(MY_WHITE_INTENSITY);
+	lightColors.push_back(MY_WHITE_INTENSITY);
+	lightColors.push_back(MY_WHITE_INTENSITY);
+	lightColors.push_back(MY_WHITE_INTENSITY);
 
     // Load textures
-	//std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
+	std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
 	//std::string pict_src = "resources/textures/hdr/christmas_night.png";
-	std::string pict_src = "resources/textures/hdr/dark_mountain.png";
+	//std::string pict_src = "resources/textures/hdr/dark_mountain.png";
 	//std::string pict_src = "resources/textures/hdr/Diego_Bay.png";
 	//std::string pict_src = "resources/textures/hdr/forest.png";
     targetTexture = loadTexture(FileSystem::getPath(pict_src).c_str());
@@ -163,8 +170,8 @@ int main()
             glUniform3fv(glGetUniformLocation(shader.Program, "viewPos"), 1, &camera.Position[0]);
             // - render tunnel
             model = glm::mat4();
-            model = glm::translate(model, glm::vec3(0.0f, 0.0f, 25.0));
-            model = glm::scale(model, glm::vec3(5.0f, 5.0f, 55.0f));
+            model = glm::translate(model, glm::vec3(0.0f, 0.0f, CUBE_LENGTH/2 ));//move the central point
+            model = glm::scale(model, glm::vec3(5.0f, 5.0f, CUBE_LENGTH));//here scale the 1x1x1 cube into 5x5xCUBE_LENGTH cube
             glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
             glUniform1i(glGetUniformLocation(shader.Program, "inverse_normals"), GL_TRUE);
             RenderCube();
@@ -328,13 +335,13 @@ void Do_Movement()
 {
     // Camera controls
     if (keys[GLFW_KEY_W])
-        camera.ProcessKeyboard(FORWARD, deltaTime);
+        camera.ProcessKeyboard(FORWARD, 2*deltaTime);
     if (keys[GLFW_KEY_S])
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
+        camera.ProcessKeyboard(BACKWARD, 2*deltaTime);
     if (keys[GLFW_KEY_A])
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(LEFT, 2*deltaTime);
     if (keys[GLFW_KEY_D])
-        camera.ProcessKeyboard(RIGHT, deltaTime);
+        camera.ProcessKeyboard(RIGHT, 2*deltaTime);
 
     if (keys[GLFW_KEY_SPACE] && !keysPressed[GLFW_KEY_SPACE])
     {
@@ -389,5 +396,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+	//scroll is not convinent to use,so do nothing
+    //camera.ProcessMouseScroll(yoffset);
 }
