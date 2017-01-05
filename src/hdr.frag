@@ -25,13 +25,11 @@ float[9] GetData(in int channel)
    return mat;
 }
 
-float[9] R_coeff()
+float[9] R_coeff(float dist)
 {
 	float pi = 3.14159;
     float alpha = 1.6;
     float scale = alpha;
-	//R_coeff() and Convolve() share same dist and hypotenuse_dist,change one,and go change another one;
-	float dist = 1.0;
 	float hypotenuse_dist = sqrt(pow(dist,2) + pow(dist,2));
 	float[9] dist_mat = float[] (hypotenuse_dist, dist, hypotenuse_dist,
                                  dist,            0.0,             dist,
@@ -45,12 +43,10 @@ float[9] R_coeff()
 } 
 
 
-float Convolve(in float[9] input_matrix) {
-	float[9] R_mat = R_coeff();
+float Convolve(in float[9] input_matrix,float dist) {
+	float[9] R_mat = R_coeff(dist);
     float res = 0.0;
 	float offset = 0.0;
-	//R_coeff() and Convolve() share same dist and hypotenuse_dist,change one,and go change another one;
-	float dist = 1.0;
 	float hypotenuse_dist = sqrt(pow(dist,2) + pow(dist,2));
 	float convlution_denom = hypotenuse_dist*4 + dist*4;
     for (int i=0; i<9; i++) {
@@ -65,12 +61,14 @@ void main()
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
     if(hdr)
     {
-		//new start
+		//dodging and burning
 		float mat_r[9] = GetData(0);
 		float mat_g[9] = GetData(1);
 		float mat_b[9] = GetData(2);
-		vec3 result = vec3(Convolve(mat_r),Convolve(mat_g),Convolve(mat_b));
-		//new end
+		float dist = 1.0;
+		vec3 result = vec3(Convolve(mat_r,dist),Convolve(mat_g,dist),Convolve(mat_b,dist));
+		result = hdrColor / ( vec3(1.0) + result );
+		
 		
 		// reinhard
         //vec3 result = hdrColor / (hdrColor + vec3(1.0));
