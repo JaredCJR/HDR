@@ -45,7 +45,10 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 
 // Options
-GLboolean hdr = true; // Change with 'Space'
+#define   NORMAL_MODE             1
+#define   REINHARD_MODE           2
+#define   DODGING_BURNING_MODE    3
+GLint hdr = NORMAL_MODE; // Change with '1','2','3'
 GLfloat exposure = 1.0f; // Change with Q and E
 
 // Global variables
@@ -187,7 +190,21 @@ int main()
         RenderQuad();       
 
         //std::cout << "exposure: " << exposure << std::endl;
-
+		switch (hdr)
+		{
+		case NORMAL_MODE:
+			std::cout << "NORMAL_MODE" << std::endl;
+			break;
+		case REINHARD_MODE:
+			std::cout << "REINHARD_MODE" << std::endl;
+			break;
+		case DODGING_BURNING_MODE:
+			std::cout << "DODGING_BURNING_MODE" << std::endl;
+			break;
+		default:
+			std::cout << "ERROR MODE" << std::endl;
+			break;
+		}
         // Swap the buffers
         glfwSwapBuffers(window);
     }
@@ -343,11 +360,12 @@ void Do_Movement()
     if (keys[GLFW_KEY_D])
         camera.ProcessKeyboard(RIGHT, 2*deltaTime);
 
-    if (keys[GLFW_KEY_SPACE] && !keysPressed[GLFW_KEY_SPACE])
-    {
-        hdr = !hdr;
-        keysPressed[GLFW_KEY_SPACE] = true;
-    }
+	if (keys[GLFW_KEY_1])
+		hdr = NORMAL_MODE;
+	if (keys[GLFW_KEY_2])
+		hdr = REINHARD_MODE;
+	if (keys[GLFW_KEY_3])
+		hdr = DODGING_BURNING_MODE;
 
     // Change exposure of the scene's HDR camera
     if (keys[GLFW_KEY_Q])

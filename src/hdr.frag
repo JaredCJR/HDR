@@ -3,7 +3,7 @@ out vec4 color;
 in vec2 TexCoords;
 
 uniform sampler2D hdrBuffer;
-uniform bool hdr;
+uniform int hdr;
 uniform float exposure;
 
 vec4 get_pixel(in vec2 coords, in float dx, in float dy) { 
@@ -62,10 +62,15 @@ void main()
 {             
     const float gamma = 2.2;
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
-    if(hdr)
+    if(hdr == 2)//REINHARD_MODE
     {
-		//dodging and burning
-		
+		// reinhard
+        vec3 result = hdrColor / (hdrColor + vec3(1.0));
+        // also gamma correct while we're at it       
+        result = pow(result, vec3(1.0 / gamma));
+        color = vec4(result, 1.0f);
+    }else if (hdr == 3)//DODGING_BURNING_MODE
+	{
 		float mat_r[9] = GetData(0);
 		float mat_g[9] = GetData(1);
 		float mat_b[9] = GetData(2);
@@ -73,13 +78,10 @@ void main()
 		vec3 result = vec3(Convolve(mat_r,dist),Convolve(mat_g,dist),Convolve(mat_b,dist));
 		result = hdrColor / ( vec3(1.0) + result );
 		
-		
-		// reinhard
-        //vec3 result = hdrColor / (hdrColor + vec3(1.0));
-        // also gamma correct while we're at it       
+        //gamma correct while we're at it       
         result = pow(result, vec3(1.0 / gamma));
         color = vec4(result, 1.0f);
-    }
+	}
     else
     {
         vec3 result = pow(hdrColor, vec3(1.0 / gamma));
