@@ -30,10 +30,12 @@ float[9] R_coeff(float dist)
 	float pi = 3.14159;
     float alpha = 1.6;
     float scale = alpha;
-	float hypotenuse_dist = sqrt(pow(dist,2) + pow(dist,2));
-	float[9] dist_mat = float[] (hypotenuse_dist, dist, hypotenuse_dist,
-                                 dist,            0.0,             dist,
-                                 hypotenuse_dist, dist, hypotenuse_dist);
+	//Convolve() also has a hypotenuse_dist var
+	float hypotenuse_dist = pow(dist,2) + pow(dist,2);
+	float square = pow(dist,2);
+	float[9] dist_mat = float[] (hypotenuse_dist, square, hypotenuse_dist,
+                                 square,            0.0,             square,
+                                 hypotenuse_dist, square, hypotenuse_dist);
 	float[9] R_coeff_mat;
 	for(int i =0;i < 9;i++)
 	{
@@ -47,7 +49,8 @@ float Convolve(in float[9] input_matrix,float dist) {
 	float[9] R_mat = R_coeff(dist);
     float res = 0.0;
 	float offset = 0.0;
-	float hypotenuse_dist = sqrt(pow(dist,2) + pow(dist,2));
+	//R_coeff() also has a hypotenuse_dist var
+	float hypotenuse_dist = pow(dist,2) + pow(dist,2);
 	float convlution_denom = hypotenuse_dist*4 + dist*4;
     for (int i=0; i<9; i++) {
        res += R_mat[i]*input_matrix[i];
@@ -62,6 +65,7 @@ void main()
     if(hdr)
     {
 		//dodging and burning
+		
 		float mat_r[9] = GetData(0);
 		float mat_g[9] = GetData(1);
 		float mat_b[9] = GetData(2);

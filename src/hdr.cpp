@@ -186,7 +186,7 @@ int main()
         glUniform1f(glGetUniformLocation(hdrShader.Program, "exposure"), exposure);
         RenderQuad();       
 
-        std::cout << "exposure: " << exposure << std::endl;
+        //std::cout << "exposure: " << exposure << std::endl;
 
         // Swap the buffers
         glfwSwapBuffers(window);
