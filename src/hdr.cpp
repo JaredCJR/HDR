@@ -21,7 +21,7 @@
 
 #define CUBE_LENGTH             (30.0f)
 #define LIGHT_ON_BACK_POS       (CUBE_LENGTH - 0.1f)
-#define MY_WHITE                150.0f
+#define MY_WHITE                255.0f
 #define MY_WHITE_INTENSITY      glm::vec3(MY_WHITE, MY_WHITE, MY_WHITE)
 
 // Properties
@@ -102,18 +102,20 @@ int main()
 
     // - Colors
     std::vector<glm::vec3> lightColors;
-    lightColors.push_back(glm::vec3(250.0f, 250.0f, 250.0f));
+    lightColors.push_back(MY_WHITE_INTENSITY);
     lightColors.push_back(MY_WHITE_INTENSITY);
 	lightColors.push_back(MY_WHITE_INTENSITY);
 	lightColors.push_back(MY_WHITE_INTENSITY);
 	lightColors.push_back(MY_WHITE_INTENSITY);
 
     // Load textures
-	std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
+	//std::string pict_src = "resources/textures/wood.jpg";
+	//std::string pict_src = "resources/textures/hdr/beautiful_young_forest.png";
 	//std::string pict_src = "resources/textures/hdr/christmas_night.png";
 	//std::string pict_src = "resources/textures/hdr/dark_mountain.png";
 	//std::string pict_src = "resources/textures/hdr/Diego_Bay.png";
 	//std::string pict_src = "resources/textures/hdr/forest.png";
+	std::string pict_src = "resources/textures/hdr/book.jpg";
     targetTexture = loadTexture(FileSystem::getPath(pict_src).c_str());
 
     // Set up floating point framebuffer to render scene to
